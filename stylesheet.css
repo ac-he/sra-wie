@@ -1,0 +1,50 @@
+body {
+    background-color: rgb(198, 226, 129);
+    color: rgb(59, 59, 119);
+}
+
+#container {
+    display: flex;
+    flex-direction: row;
+}
+
+#main {
+    background-color: black;
+    padding-left: 5px;
+    margin: 5px
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: row;
+}
+
+.palette {
+    margin: 5px;
+}
+
+.button {
+    background-color:cornflowerblue;
+    color: darkblue;
+    padding: 5px;
+    width: min-content;
+    cursor: pointer; 
+}
+
+#print {
+    font-size: xx-large;
+}
+
+@page {
+    orientation: portrait;
+}
+
+@media print
+{    
+    .no-print
+    {
+        visibility: collapse;
+        width: 0 !important;
+        height: 0 !important;
+    }
+}
