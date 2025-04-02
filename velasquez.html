@@ -136,6 +136,7 @@
               height="40" />
           </svg>
           <div id="swap" class="button">¡Invierte!</div>
+          <div id="eyedropper" class="button">Selector de Color</div>
         </div>
       </div>
     </div>
@@ -2130,58 +2131,122 @@
     var _bIndex = 8;
     var _fType = "a";
 
+    var _eyedropperMode = false;
+
+    var $swatchesA = $("#swatches-a");
+    var $swatchesB = $("#swatches-b");
+    var $swatchesF = $("#swatches-f");
+
     const types = ['a', 'b', 'c', 'd', 'e', 'f']
     types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
+
+    var fixSwatchSelection = function(){
+      console.log({"a": _aIndex, "b": _bIndex})
+      $fSwatch = $(`#${_fType}`);
+      var loc = [parseInt($fSwatch.attr('x'), 10), parseInt($fSwatch.attr('y'), 10)]
+      $("#selection-f", $swatchesF).attr('x', loc[0]);
+      $("#selection-f", $swatchesF).attr('y', loc[1]);
+
+      $aSwatch = $(`#swatches-a #${_aIndex}`);
+      loc = [parseInt($aSwatch.attr('x'), 10), parseInt($aSwatch.attr('y'), 10)]
+      console.log(loc)
+      $("#selection-a", $swatchesA).attr('x', loc[0]);
+      $("#selection-a", $swatchesA).attr('y', loc[1]);
+
+      $bSwatch = $(`#swatches-b #${_bIndex}`);
+      loc = [parseInt($bSwatch.attr('x'), 10), parseInt($bSwatch.attr('y'), 10)]
+      $("#selection-b", $swatchesB).attr('x', loc[0]);
+      $("#selection-b", $swatchesB).attr('y', loc[1]);
+    }
     
-    $("#velasquez").click(function (event) { $(event.target).attr('fill', `url(#${_aIndex}-${_bIndex}-${_fType})`)}) 
+    $("#velasquez").click(function (event) { 
+      if(_eyedropperMode){
+        var selection = $(event.target).attr('fill')
+        if (selection == "#ffffff") {
+          _aIndex = 44;
+          _bIndex = 8;
+          _fType = 'a';
+        } else if (selection == "#000000") {
+          _aIndex = 44;
+          _bIndex = 8;
+          _fType = 'b';
+        } else {
+          if(selection[6] == '-') {
+            _aIndex = selection[5]
+            selection = selection.substring(7)
+          } else {
+            _aIndex = selection.substring(5,7)
+            selection = selection.substring(8)
+          }
+          if(selection[1] == '-') {
+            _bIndex = selection[0]
+            _fType = selection[2]
+          } else {
+            _bIndex = selection.substring(0,2)
+            _fType = selection[3]
+          }
+        }
+        fixSwatchSelection();
+
+        _eyedropperMode = false;
+        $("#eyedropper").attr('class', 'button')
+        types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
+      } else {
+        $(event.target).attr('fill', `url(#${_aIndex}-${_bIndex}-${_fType})`)
+      }
+    }) 
+
+    $("#eyedropper").click(function (){
+      _eyedropperMode = !_eyedropperMode;
+      if(_eyedropperMode) {
+        $("#eyedropper").attr('class', 'button-selected')
+      } else {
+        $("#eyedropper").attr('class', 'button')
+      }
+    })
 
     $("#swap").click(function () {
+      _eyedropperMode = false;
       var s = _bIndex; 
       _bIndex = _aIndex; 
       _aIndex = s; 
+
+      fixSwatchSelection()
       types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
     })
 
     $("#print").click(function () {
+      _eyedropperMode = false;
       window.print();
     })
 
-
-    var $swatchesA = $("#swatches-a");
     $swatchesA.click(function (event) {
+      _eyedropperMode = false;
       $swatch = $(event.target);
-      loc = [parseInt($swatch.attr('x'), 10), parseInt($swatch.attr('y'), 10)]
-      $("#selection-a", $swatchesA).attr('x', loc[0]);
-      $("#selection-a", $swatchesA).attr('y', loc[1]);
 
       _aIndex = $swatch.attr('id')
-      console.log( `fill:url(#${_aIndex}-${_bIndex}-${_fType}`)
+
+      fixSwatchSelection();
       types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
     })
 
-    var $swatchesB = $("#swatches-b");
     $swatchesB.click(function (event) {
+      _eyedropperMode = false;
       $swatch = $(event.target);
-      loc = [parseInt($swatch.attr('x'), 10), parseInt($swatch.attr('y'), 10)]
-      $("#selection-b", $swatchesB).attr('x', loc[0]);
-      $("#selection-b", $swatchesB).attr('y', loc[1]);
 
       _bIndex = $swatch.attr('id')
-      console.log( `fill:url(#${_aIndex}-${_bIndex}-${_fType}`)
+      
+      fixSwatchSelection();
       types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
     })
 
-    var $swatchesF = $("#swatches-f");
     $swatchesF.click(function (event) {
+      _eyedropperMode = false;
       $swatch = $(event.target);
-      loc = [parseInt($swatch.attr('x'), 10), parseInt($swatch.attr('y'), 10)]
-      $("#selection-f", $swatchesF).attr('x', loc[0]);
-      $("#selection-f", $swatchesF).attr('y', loc[1]);
-
-      var style = $swatch.attr('style');
 
       _fType = $swatch.attr('id')
-      console.log( `fill:url(#${_aIndex}-${_bIndex}-${_fType}`)
+
+      fixSwatchSelection();
       types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
     })
   </script>

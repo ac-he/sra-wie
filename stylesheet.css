@@ -29,6 +29,16 @@ body {
     padding: 5px;
     width: min-content;
     cursor: pointer; 
+    margin: 5px;
+}
+
+.button-selected {
+    background-color:rgb(142, 172, 228);
+    color: darkblue;
+    padding: 5px;
+    width: min-content;
+    cursor: pointer; 
+    margin: 5px;
 }
 
 #print {
