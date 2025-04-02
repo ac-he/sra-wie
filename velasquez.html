@@ -2158,6 +2158,14 @@
       $("#selection-b", $swatchesB).attr('x', loc[0]);
       $("#selection-b", $swatchesB).attr('y', loc[1]);
     }
+
+    var fixEyedropperMode = function() {
+      if(_eyedropperMode) {
+        $("#eyedropper").attr('class', 'button-selected')
+      } else {
+        $("#eyedropper").attr('class', 'button')
+      }
+    }
     
     $("#velasquez").click(function (event) { 
       if(_eyedropperMode){
@@ -2189,7 +2197,8 @@
         fixSwatchSelection();
 
         _eyedropperMode = false;
-        $("#eyedropper").attr('class', 'button')
+        fixEyedropperMode();
+        
         types.forEach((t) => {$(`#${t}`).attr('style', `fill:url(#${_aIndex}-${_bIndex}-${t}`)})
       } else {
         $(event.target).attr('fill', `url(#${_aIndex}-${_bIndex}-${_fType})`)
@@ -2198,15 +2207,13 @@
 
     $("#eyedropper").click(function (){
       _eyedropperMode = !_eyedropperMode;
-      if(_eyedropperMode) {
-        $("#eyedropper").attr('class', 'button-selected')
-      } else {
-        $("#eyedropper").attr('class', 'button')
-      }
+      fixEyedropperMode();
     })
 
     $("#swap").click(function () {
       _eyedropperMode = false;
+      fixEyedropperMode();
+
       var s = _bIndex; 
       _bIndex = _aIndex; 
       _aIndex = s; 
@@ -2217,11 +2224,15 @@
 
     $("#print").click(function () {
       _eyedropperMode = false;
+      fixEyedropperMode();
+
       window.print();
     })
 
     $swatchesA.click(function (event) {
       _eyedropperMode = false;
+      fixEyedropperMode();
+
       $swatch = $(event.target);
 
       _aIndex = $swatch.attr('id')
@@ -2232,6 +2243,8 @@
 
     $swatchesB.click(function (event) {
       _eyedropperMode = false;
+      fixEyedropperMode();
+
       $swatch = $(event.target);
 
       _bIndex = $swatch.attr('id')
@@ -2242,6 +2255,8 @@
 
     $swatchesF.click(function (event) {
       _eyedropperMode = false;
+      fixEyedropperMode();
+
       $swatch = $(event.target);
 
       _fType = $swatch.attr('id')
